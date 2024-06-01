@@ -1,0 +1,226 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #feedbd;
+    margin: 0;
+    padding: 0;
+ }
+ 
+ .Btn {
+    width: auto;
+    height: 50px;
+    padding: 10px 20px;
+    cursor: pointer;
+    /* border-radius: 5px; */
+    transition: all 0.2s ease-in-out;
+    -webkit-box-shadow: 0 6px 14px 1.5px rgba(0, 0, 0, 0.17);
+    -moz-box-shadow: 0 6px 14px 1.5px rgba(0, 0, 0, 0.17);
+    box-shadow: 0 6px 14px 1.5px rgba(0, 0, 0, 0.17);
+ }
+ 
+ .popup-container {
+    width: 150px; /* Set the width */
+    height: auto; /* Set the height */
+    background-color: #fff;
+    padding: 20px;
+    background-color: #feedbd;
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+p{
+    color: #233040;
+    font-family: Poppins;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+button {
+    appearance: none;
+    background-color: #fed44c;
+    border: 2px solid #1A1A1A;
+    border-radius: 0.9375em;
+    box-sizing: border-box;
+    color: #3B3B3B;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Poppins;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0;
+    min-height: 3.75em;
+    min-width: 0;
+    outline: none;
+    padding: 1em 2.3em;
+    text-align: center;
+    text-decoration: none;
+    transition: all 200ms cubic-bezier(.23, 1, 0.32, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    will-change: transform;
+
+    -webkit-box-shadow: 3px 3px 10px 5px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 3px 3px 10px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 3px 3px 10px 5px rgba(0, 0, 0, 0.2);
+}
+   
+button:disabled {
+    pointer-events: none;
+}
+
+button:hover {
+    color: #fff;
+    background-color: #1A1A1A;
+    box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+    transform: translateY(-2px);
+    -webkit-box-shadow: 3px 3px 10px -32px #dddddd;
+    -moz-box-shadow: 3px 3px 10px -32px #dddddd;
+    box-shadow: 3px 3px 10px -32px #dddddd;
+}
+
+button:active {
+    box-shadow: none;
+    transform: translateY(0);
+    background-color: #298af8;
+    border: 2px solid #004492;
+}
+
+img{
+    width: 60px;
+    margin: 10px;
+    z-index: 1000;
+}
+
+.gray{
+    background-color: #adb3be !important;
+       
+}
+.unlocked{
+    background-color: #233040 !important;
+    color: #fed44b !important;
+}
+
+h1{
+    font-family:"Poppins";
+    font-size:20px;
+    font-weight: bold;
+}
+
+#icon:hover + .balloon_container {
+    transform: scale(1);
+    /* animation: shake 0.3s ease infinite; */
+    animation: jump 0.5s ease-in-out;
+}
+
+#icon:hover{
+        animation: jump 0.3s ease-in-out;
+}
+
+@keyframes shake {
+    0% { transform: translateX(-1px); }
+    50% { transform: translateX(1px); }
+    100% { transform: translateX(-1px); }
+}
+
+@keyframes jump {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0); }
+}
+
+
+.balloon_container {
+    position: absolute;
+    top:70px;
+    right: 10px;
+    transition: transform 0.2s ease-in-out;
+    z-index: 1000;
+}
+.balloon {
+    position: relative;
+    width: 50px;
+    height: 25px;
+    border-radius: 10px 10px 10px 0% / 10px 10px 10px 0% ;
+    border: 10px solid black;
+    background: #fff;
+    margin: 5px;
+    transition: all 200ms cubic-bezier(.23, 1, 0.32, 1);
+    align-content: center;
+}
+.balloon:hover{
+    scale:1.3;
+}
+/* .balloon:before {
+  position: absolute;
+  content: "";
+  right: 100%;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-right: 5px solid #e66;
+  margin-right: 5px;
+  top: 20px;
+  left:-1px;
+  transform: rotate(-45deg);
+} */
+
+.balloon2 {
+    background: #ff0000;
+    border: 0;
+    padding: 1px;
+}
+.balloon2 span{
+    color: white;
+}
+.aemIsActive span, .aemInActive span{
+    color: rgb(26, 31, 44);
+}
+.aemIsActive{
+    background: #aefc5a !important;
+    border: 0;
+    padding: 1px;
+}
+.aemInActive{
+    background: #fed44b !important;
+    border: 0;
+    padding: 1px;
+}
+
+/* .balloon2:before {
+  border-left-color: #e66;
+  margin: 0;
+} */
+
+.status{
+    font-family: "Poppins";
+    font-size: 10px;
+    color: black;
+    font-weight:600;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    word-wrap: break-word;
+}
+.inActive {
+    position: relative; /* Ensure the container is the positioning context for the overlay */
+}
+.inActive::after {
+    content: "";
+    position: absolute; /* Position the overlay absolutely within the container */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(26, 26, 26, 0.25); /* More readable way to set the background color with opacity */
+    z-index: 999;
+}
+
+
+

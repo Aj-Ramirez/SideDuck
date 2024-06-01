@@ -1,0 +1,664 @@
+  function getDOM() {
+     const hostElement = document.querySelector('helix-sidekick');
+
+    if (hostElement) {
+        const shadowRoot = hostElement.shadowRoot;
+        const button = shadowRoot.querySelector('button[disabled]');
+        
+        // Return an object indicating the status
+        if (button) {
+            console.log('Sidekick');
+            return { status: 'found', message: 'Button found', button: true };
+        } else {
+            console.log('!Sidekick');
+            return { status: 'not found', message: 'Button not found', button: false };
+        }
+    } else {
+        console.log('!Sidekick');
+        return { status: 'host not found', message: 'Host element not found', button: false };
+    }
+  }
+
+  // Define the DOM manipulation function to be injected
+function manipulateDOM() {
+    // Assume we have a reference to the element that hosts the shadow root
+    const hostElement = document.querySelector('helix-sidekick');
+
+    if (hostElement) {
+        // Access the shadow root
+        const shadowRoot = hostElement.shadowRoot;
+
+        // Query the button inside the shadow root
+        const button = shadowRoot.querySelector('button[disabled]');
+
+        // Return an object indicating the status
+        if (button) {
+            return { status: 'found', message: 'Button found', button: true };
+        } else {
+            return { status: 'not found', message: 'Button not found', button: false };
+        }
+    } else {
+        return { status: 'host not found', message: 'Host element not found', button: false };
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const button = document.querySelector('.Btn');
+    const container = document.querySelector('.popup-container');
+    const aemStat = document.querySelector('.aemStatus');
+    const speech = document.querySelector('.balloon2');
+
+    function updateButtonState(tabUrl) {
+        if (tabUrl.includes("hlx.live") || tabUrl.includes("hlx.page")) {
+            if(tabUrl && tabUrl.endsWith('/')){
+                // SideDuck is INACTIVE
+                button.disabled = false;
+                button.classList.remove('gray');
+                container.classList.remove('unlocked');
+                speech.classList.remove('aemIsActive');
+                aemStat.textContent = "OFF";
+            } else {  
+                // SideDuck is ACTIVE
+                button.disabled = true;
+                button.classList.add('gray');
+                container.classList.add('unlocked');
+                speech.classList.add('aemIsActive');
+                aemStat.textContent = "ON";
+            }
+        } else {
+            // SideKick is N/A
+            button.disabled = true;
+            button.classList.add('gray');
+            container.classList.add('unlocked');
+            speech.classList.add('aemInActive');
+            aemStat.textContent = "N/A";
+            container.classList.add('inActive');
+        }
+    }
+
+    // Listen for messages from the background script
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+        console.log(message); // Log the message for debugging
+
+        // Update the UI based on the message received
+        if (message.status === 'Disable') {
+            button.disabled = true;
+            button.classList.add('gray');
+            aemStat.textContent = "OFF";
+        } else if (message.status === 'Enable') {
+            button.disabled = false;
+            button.classList.remove('gray');
+            aemStat.textContent = "ON";
+        } else if (message.status === 'Not Available') {
+            button.disabled = true;
+            button.classList.add('gray');
+            aemStat.textContent = "N/A";
+        }
+    });
+
+    // Assume initial update based on current URL
+    chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+        if (tabs.length > 0) {
+            updateButtonState(tabs[0].url);
+        }
+    });
+});
+
+
+
+
+
+// background.js
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.type === "contentScriptMessage") {
+        console.log("Received message from content script:", request.data);
+        // Do something with the message
+        sendResponse({received: true});
+    }
+});
+
+
+  // content.js
+chrome.runtime.sendMessage({type: "contentScriptMessage", data: "Hello from content script!"}, function(response) {
+    console.log("Received response from background script:", response);
+});
+
+        // Inject content script into the active tab if not already injected
+    try {
+        await chrome.scripting.executeScript({
+            target: { tabId: info.tabId },
+            files: ['content.js']
+        });
+    } catch (error) {
+        console.error('Error injecting content script:', error);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Move the getDOM function to content.js
+function getDOM() {
+    const hostElement = document.querySelector('helix-sidekick');
+    if (hostElement) {
+        const shadowRoot = hostElement.shadowRoot;
+        const button = shadowRoot.querySelector('button[disabled]');
+        
+        // Return an object indicating the status
+        if (button) {
+            return { status: 'Disable', message: 'Button found but inActive', button: false };
+        } else {
+            return { status: 'Enable', message: 'Button found Activated', button: true };
+        }
+    } else {
+        return { status: 'Not Available', message: 'AEM Sidekick not found', button: false };
+    }
+}
+
+const button = document.querySelector('.Btn');
+const container = document.querySelector('.popup-container');
+const aemStat = document.querySelector('.aemStatus');
+const speech = document.querySelector('.balloon2');
+
+function updateButtonState(tabUrl) {
+    const domStatus = getDOM(); // Call getDOM function
+
+    if (tabUrl.includes("hlx.live") || tabUrl.includes("hlx.page")) {
+        if (tabUrl && tabUrl.endsWith('/')) {
+            // SideDuck is INACTIVE
+            button.disabled = false;
+            button.classList.remove('gray');
+            container.classList.remove('unlocked');
+            speech.classList.remove('aemIsActive');
+            aemStat.textContent = "OFF";
+        } else {  
+            // SideDuck is ACTIVE
+            button.disabled = true;
+            button.classList.add('gray');
+            container.classList.add('unlocked');
+            speech.classList.add('aemIsActive');
+            aemStat.textContent = "ON";
+        }
+    } else {
+        // SideKick is N/A
+        button.disabled = true;
+        button.classList.add('gray');
+        container.classList.add('unlocked');
+        speech.classList.add('aemInActive');
+        aemStat.textContent = "N/A";
+        container.classList.add('inActive');
+    }
+
+    // Update based on DOM status
+    if (domStatus.status === 'Disable') {
+        button.disabled = true;
+        button.classList.add('gray');
+        aemStat.textContent = "INACTIVE";
+    } else if (domStatus.status === 'Enable') {
+        button.disabled = false;
+        button.classList.remove('gray');
+        aemStat.textContent = "ACTIVE";
+    } else {
+        aemStat.textContent = "N/A";
+    }
+}
+
+// Assuming you have a way to get the current tab URL, call updateButtonState with it
+const currentTabUrl = window.location.href; // Example, this should be the actual tab URL
+updateButtonState(currentTabUrl);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function test(tabUrl) {
+  // Check for hostElement existence (consider error handling)
+  const hostElement = document.querySelector('helix-sidekick');
+  if (!hostElement) {
+    console.log("Error: 'helix-sidekick' element not found");
+    return; // Exit function if element is missing
+  }
+
+  const userDomUrl = tabUrl.includes("hlx.page") || tabUrl.includes("hlx.live");
+
+  if (userDomUrl) {
+    // Check for shadowRoot existence (consider error handling)
+    if (!hostElement.shadowRoot) {
+      console.log("No shadow DOM available for 'helix-sidekick'");
+      console.log("_"); // Set default value when no shadow DOM
+      aemStat.textContent = "_";
+      return; // Exit function if shadow DOM is missing
+    }
+
+    const disabledButton = hostElement.shadowRoot.querySelector('button[disabled]');
+
+    if (disabledButton) {
+        console.log("0"); // Disabled button found
+        aemStat.textContent = "0";
+    } else {
+      const enabledButton = hostElement.shadowRoot.querySelector('button:not([disabled])');
+      if (enabledButton) {
+        console.log("1"); // Enabled button found (optional addition)
+        aemStat.textContent = "1";
+      } else {
+        console.log("_"); // No buttons found (or no enabled buttons)
+        aemStat.textContent = "_";
+      }
+    }
+  } else {
+    console.log("_"); // User is not on a Hlx page/live URL
+    aemStat.textContent = "_";
+  }
+}
+
+const tabUrl = window.location.href;
+test(tabUrl);
+
+
+
+
+
+    const hostElement = document.querySelector('helix-sidekick')?.shadowRoot?.querySelector('button[disabled]');
+
+switch (hostElement) {
+  case null:
+    console.log("on");
+    break;
+  case undefined:
+    console.log("n/a");
+    break;
+  default:
+    console.log("off");
+}
+
+
+
+  function test(tabUrl){
+    const hostElement = document.querySelector('helix-sidekick')?.shadowRoot;
+    const userDomUrl = (tabUrl.includes("hlx.page") || tabUrl.includes("hlx.live"));
+    const isSidekick = userDomUrl && hostElement;
+    
+    if (userDomUrl) {
+        if(hostElement?.querySelector('button[disabled]')){
+            aemStat.textContent = "0";
+            console.log("1")
+        }
+        if(hostElement?.querySelector('button:not([disabled])')){
+            aemStat.textContent = "1";
+            console.log("1")
+        }
+    } else{
+        aemStat.textContent = "n/a";
+            console.log("_")
+    }
+}
+
+switch(userDomUrl){
+ case hostElement:
+        aemStat.textContent = "0";
+        console.log("0");
+    break;
+case hostElement1:
+        aemStat.textContent = "1";
+        console.log("1");
+    break;
+default:
+        aemStat.textContent = "_";
+        console.log("_");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.type === "checkHelixSidekick") {
+    const hostElement = document.querySelector('helix-sidekick');
+    if (!hostElement) {
+      console.log("Error: 'helix-sidekick' element not found");
+      sendResponse("_");
+      return;
+    }
+
+    let userDomUrl = false;
+    if (hostElement.shadowRoot) { // Check for shadow DOM existence
+      const tabUrl = sender.tab.url;
+      userDomUrl = tabUrl.includes("hlx.page") || tabUrl.includes("hlx.live");
+
+      if (userDomUrl) {
+        const disabledButton = hostElement.shadowRoot.querySelector('button[disabled]');
+        if (disabledButton) {
+          console.log("0"); // Disabled button found
+          sendResponse("0");
+        } else {
+          const enabledButton = hostElement.shadowRoot.querySelector('button:not([disabled])');
+          if (enabledButton) {
+            console.log("1"); // Enabled button found
+            sendResponse("1");
+          } else {
+            console.log("_"); // No buttons found
+            sendResponse("_");
+          }
+        }
+      } else {
+        console.log("_"); // User is not on a Hlx page/live URL
+        sendResponse("_");
+      }
+    } else {
+      console.log("No shadow DOM available for 'helix-sidekick'");
+      sendResponse("_");
+    }
+  }
+});
+
+
+
+  chrome.runtime.sendMessage({ type: "checkHelixSidekick" }, (response) => {
+  if (response) {
+    document.querySelector(".aemStatus").textContent = response;
+
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 88888888888888888888888888888888888888888888888888888888
+
+  function checkActiveTab() {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+
+      if (tabs.length > 0) {
+        const activeTab = tabs[0];
+        // console.log(activeTab); // This will log the entire tab object
+        console.log("Active Tab", activeTab.url); // This will log the URL of the active tab
+
+        const tabUrl = activeTab.url.toLowerCase();
+        
+        if (tabUrl.includes("hlx.page") || tabUrl.includes("hlx.live")) {
+        chrome.scripting.executeScript({
+                target: { tabId: activeTab.id },
+                func: checkHelixSidekick
+            },
+              (results) => {
+                if(results){
+                  if (results[0].result.helixSidekick) {
+                      console.log("Found it HS");
+                  } else {
+                    console.log("Not Found HS")
+                  }
+                  if (results[0].result.Btn) {
+                      console.log("Found it Btn");
+                  } else {
+                    console.log("Not Found Btn")
+                  }
+                }
+                  
+              });
+      }else{
+          console.log("Element: N/A")
+      }
+        
+        test(tabUrl);
+
+      }
+    });
+  }
+
+
+function checkHelixSidekick() {
+   const hostElement = document.querySelector('helix-sidekick');
+   const shadowRoot = hostElement?.shadowRoot;
+   const btn = shadowRoot?.querySelector('button[disabled]');
+    return{
+       helixSidekick: !!hostElement,
+       Btn: !!btn,
+    }
+  
+}
+
+function test(tabUrl){
+    const hostElement = document.querySelector('helix-sidekick')
+  console.log("hostElement", hostElement)
+      // ?.shadowRoot?.querySelector('button[disabled]');
+    const userDomUrl = (tabUrl.includes("hlx.page") || tabUrl.includes("hlx.live"));
+    const isSidekick = userDomUrl && hostElement;
+
+    if (userDomUrl) {
+       console.log("UD = ", userDomUrl)
+
+      if(onHelixSidekickReady = undefined){
+        console.log("HE",hostElement)
+        const shadowRoot = hostElement?.shadowRoot;
+        
+        if(shadowRoot){
+           console.log("SR",shadowRoot)
+           const btn = shadowRoot?.querySelector('button[disabled]');
+
+           console.log("btn",btn)
+              if(btn){
+                // aemStat.textContent = "off";
+                console.log("0")
+                console.log("hostElement",btn, "|", "userDomUrl", userDomUrl)
+              } else {
+                // aemStat.textContent = "on";
+                console.log("1")
+                console.log("hostElement",btn, "|", "userDomUrl", userDomUrl)
+              }
+          
+        }
+      } else{
+       console.log("HE = ", hostElement)
+      }
+     
+    } else {
+      // aemStat.textContent ="n/a"
+      console.log("n/a")
+        // console.log("hostElement",btn, "|", "userDomUrl", userDomUrl)
+    }
+  }
+
+
+
+  checkActiveTab();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  function checkActiveTab() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs.length > 0) {
+      const activeTab = tabs[0];
+      console.log("Active Tab", activeTab.url); // This will log the URL of the active tab
+
+      const tabUrl = activeTab.url.toLowerCase();
+
+      if (tabUrl.includes("hlx.page") || tabUrl.includes("hlx.live")) {
+        chrome.scripting.executeScript({
+          target: { tabId: activeTab.id },
+          func: checkHelixSidekick
+        },
+        (results) => {
+          if (results && results[0]) {
+            const helixSidekick = results[0].result.helixSidekick;
+            const btn = results[0].result.Btn;
+
+            console.log(helixSidekick ? "Found it HS" : "Not Found HS");
+            console.log(btn ? "Found it Btn" : "Not Found Btn");
+
+            // Pass the results to the test function
+            test(tabUrl, helixSidekick, btn);
+          }
+        });
+      } else {
+        console.log("Element: N/A");
+        test(tabUrl, false, false); // No HelixSidekick or Btn found
+      }
+    }
+  });
+}
+
+function checkHelixSidekick() {
+  const hostElement = document.querySelector('helix-sidekick');
+  const shadowRoot = hostElement?.shadowRoot;
+  const btn = shadowRoot?.querySelector('button[disabled]');
+  return {
+    helixSidekick: !!hostElement,
+    Btn: !!btn,
+  };
+}
+
+function test(tabUrl, helixSidekick, btn) {
+  console.log("Helix-Sidekick", helixSidekick);
+  const userDomUrl = tabUrl.includes("hlx.page") || tabUrl.includes("hlx.live");
+  // const isSidekick = userDomUrl && helixSidekick;
+
+  if (userDomUrl) {
+    console.log("hlx-url = ", userDomUrl);
+
+    if (helixSidekick) {
+      console.log("Helix-Sidekick", helixSidekick);
+      if(btn){
+        console.log("0");
+        aemStat.textContent = "off"
+      }else{
+        console.log("1");
+        aemStat.textContent ="on"
+      }
+
+    } else {
+      console.log("Helix-Sidekick not Found ", helixSidekick);
+    }
+  } else {
+    console.log("n/a");
+    aemStat.textContent ="n/a"
+  }
+}
+
+checkActiveTab();

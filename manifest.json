@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "SideDuck Trailing Slash Remover",
+  "version": "1.0",
+  "description": "An extension to remove trailing slashes from URLs.",
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "webNavigation",
+    "scripting"
+  ],
+  "host_permissions": [
+      "*://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]  
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",  
+    "default_title": "SideDuck",
+    "default_icon":"icon/icon.png"
+  },
+  "icons": {
+      "16": "icon/icon.png",
+      "48": "icon/icon.png",
+      "128": "icon/icon.png"
+  }
+}
