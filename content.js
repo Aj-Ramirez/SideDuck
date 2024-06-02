@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(activeTab); // This will log the entire tab object
         console.log("Active Tab", activeTab.url); // This will log the URL of the active tab
 
-        const tabUrl = activeTab.url.toLowerCase(); 
+        const tabUrl = activeTab.url.toLowerCase();
         // updateButtonState(tabUrl);
 
         if (tabUrl.includes("hlx.page") || tabUrl.includes("hlx.live")) {
